@@ -21,15 +21,18 @@
             android:layout_weight="1"
             android:textColor="#FFFFFF" />
 
-        <!-- Color picker -->
-        <!--<com.madrapps.pikolo.HSLColorPicker -->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="100dp" />-->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Color"
+                android:onClick="showColorPicker"/>
 
             <Button
                 android:id="@+id/buttonGrid"

@@ -1,9 +1,8 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
-import android.nfc.Tag;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +18,11 @@ public class AndroidCanvasExample extends AppCompatActivity {
 
         customCanvas = (CanvasView) findViewById(R.id.signature_canvas);
         gridButton = (Button) findViewById(R.id.buttonGrid);
+    }
+
+    public void showColorPicker(View w){
+        Intent intent = new Intent(this, ColorPicker.class);
+        startActivity(intent);
     }
 
     public void clearCanvas(View v) {
