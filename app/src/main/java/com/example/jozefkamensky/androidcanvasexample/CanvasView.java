@@ -6,9 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -25,7 +23,8 @@ public class CanvasView extends View {
     private Canvas mCanvas;
     private Path mPath;
     Context context;
-    private Paint mPaint;
+    private Paint linePaint;
+    private Paint rectPaint;
     private float mX, mY;
     private static final float TOLERANCE = 5;
     private static final float squareEdge = 40;
@@ -45,12 +44,16 @@ public class CanvasView extends View {
         mPath = new Path();
 
         // and we set a new Paint with the desired attributes
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.BLACK);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeWidth(4f);
+        linePaint = new Paint();
+        linePaint.setAntiAlias(true);
+        linePaint.setColor(Color.BLACK);
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setStrokeJoin(Paint.Join.ROUND);
+        linePaint.setStrokeWidth(4f);
+
+        rectPaint = new Paint();
+        rectPaint.setColor(Color.BLACK);
+        rectPaint.setStyle(Paint.Style.FILL);
     }
 
     // override onSizeChanged
@@ -71,25 +74,25 @@ public class CanvasView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawGridContent(canvas);
-        if (showGrid) canvas.drawLines(gridCoordinates, mPaint);
+        if (showGrid) canvas.drawLines(gridCoordinates, linePaint);
 
     }
 
     private void drawGridContent(Canvas canvas) {
-        for(GridTileToDraw g: grid.getGridTiles()){
-            canvas.drawRect(g.getRect(), g.getPaint());
+        for(Tile t: grid.getGridTiles()){
+            canvas.drawRect(t.getTileAsRect(), t.getColor());
         }
     }
 
     // when ACTION_DOWN start touch according to the x,y values
     private void startTouch(float x, float y) {
-        grid.changeTileColor(x, y);
+        grid.changeTileColor(x, y, rectPaint);
 
     }
 
     // when ACTION_MOVE move touch according to the x,y values
     private void moveTouch(float x, float y) {
-        grid.changeTileColor(x, y);
+        grid.changeTileColor(x, y, rectPaint);
     }
 
     public void clearCanvas() {

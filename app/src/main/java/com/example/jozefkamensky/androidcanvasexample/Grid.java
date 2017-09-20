@@ -1,6 +1,7 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
 import android.graphics.RectF;
+import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -44,18 +45,18 @@ public class Grid {
         tiles = new Tile[heightInTiles][widthInTiles];
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
-                tiles[i][j] = new Tile(startX + j * tileSize, startY + i * tileSize);
+                tiles[i][j] = new Tile(tileSize, startX + j * tileSize, startY + i * tileSize);
             }
         }
     }
 
-    public void changeTileColor(float x, float y){
+    public void changeTileColor(float x, float y, Paint color){
 
         int tileX = ((int)x - startX) / tileSize;
         int tileY = ((int)y - startY) / tileSize;
         if (tileX < 0 || tileX >= width) return;
         if (tileY < 0 || tileY >= height) return;
-        tiles[tileY][tileX].black = !tiles[tileY][tileX].black;
+        tiles[tileY][tileX].setColor(color);
     }
 
     public float[] getGridLinesCoordinates(){
@@ -99,24 +100,15 @@ public class Grid {
         return res;
     }
 
-    public List<GridTileToDraw> getGridTiles(){
+    public List<Tile> getGridTiles(){
 
-        List<GridTileToDraw> res = new ArrayList<>();
+        List<Tile> res = new ArrayList<>();
 
         for (int i = 0; i < height; i++){
             for (int j = 0; j < width; j++){
-                GridTileToDraw tile = new GridTileToDraw();
-                if (tiles[i][j].isBlack()) tile.setColor(0,0,0,255);
-                else tile.setColor(255,255,255,0);
-
-                int x = tiles[i][j].getX();
-                int y = tiles[i][j].getY();
-                tile.setRect(new RectF(x,y, x + tileSize, y + tileSize));
-
-                res.add(tile);
+                res.add(tiles[i][j]);
             }
         }
         return res;
     }
-
 }
