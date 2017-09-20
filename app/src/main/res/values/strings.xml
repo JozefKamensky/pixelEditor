@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">AndroidCanvasExample</string>
+    <string name="clearCanvasButtonTitle">Clear Canvas</string>
+    <string name="showGridButtonTitle">Show Grid</string>
+    <string name="hideGridButtonTitle">Hide Grid</string>
+</resources>
