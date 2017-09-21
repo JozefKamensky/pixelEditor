@@ -1,6 +1,5 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
-import android.graphics.RectF;
 import android.graphics.Paint;
 import android.util.Log;
 
@@ -45,12 +44,12 @@ public class Grid {
         tiles = new Tile[heightInTiles][widthInTiles];
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
-                tiles[i][j] = new Tile(tileSize, startX + j * tileSize, startY + i * tileSize);
+                tiles[i][j] = new Tile(startX + j * tileSize, startY + i * tileSize);
             }
         }
     }
 
-    public void changeTileColor(float x, float y, Paint color){
+    public void changeTileColor(float x, float y, int color){
 
         int tileX = ((int)x - startX) / tileSize;
         int tileY = ((int)y - startY) / tileSize;
@@ -110,5 +109,9 @@ public class Grid {
             }
         }
         return res;
+    }
+
+    public int getTileSize(){
+        return tileSize;
     }
 }

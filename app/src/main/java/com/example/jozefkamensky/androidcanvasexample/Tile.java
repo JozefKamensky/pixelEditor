@@ -11,10 +11,8 @@ public class Tile {
     private int x;
     private int y;
     private Paint paint;
-    private int tileSize;
 
-    public Tile(int tileSize, int x, int y){
-        this.tileSize = tileSize;
+    public Tile( int x, int y){
         this.x = x;
         this.y = y;
         paint = new Paint();
@@ -34,15 +32,15 @@ public class Tile {
         paint.setColor(color);
     }
 
-    public void setColor(Paint color){
-        paint = color;
+    public void setColor(int color){
+        paint.setColor(color);
     }
 
     public Paint getColor(){
         return paint;
     }
 
-    public RectF getTileAsRect(){
+    public RectF getTileAsRect(int tileSize){
         return new RectF(x,y, x + tileSize, y + tileSize);
     }
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_editor_absoluteY="81dp"
+    tools:layout_editor_absoluteX="0dp">
+
+    <com.madrapps.pikolo.HSLColorPicker
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/HSLColorPicker"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:id="@+id/imageViewActualColor"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_circle"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/HSLColorPicker"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="@+id/HSLColorPicker"
+        app:layout_constraintTop_toTopOf="@+id/HSLColorPicker"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/HSLColorPicker"
+        android:layout_marginBottom="8dp" />
+
+
+    <Button
+        android:id="@+id/buttonAddToPalette"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/addColorToPaletteButtonTitle"
+        app:layout_constraintRight_toLeftOf="@+id/buttonSelectColor"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="85dp"
+        app:layout_constraintTop_toBottomOf="@+id/HSLColorPicker"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/buttonSelectColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selectColorButtonTitle"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/HSLColorPicker"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="8dp" />
+
+
+</android.support.constraint.ConstraintLayout>

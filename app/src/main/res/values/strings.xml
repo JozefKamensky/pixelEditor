@@ -3,6 +3,8 @@
     <string name="clearCanvasButtonTitle">Clear Canvas</string>
     <string name="showGridButtonTitle">Show Grid</string>
     <string name="hideGridButtonTitle">Hide Grid</string>
+
+    <string name="colorPickerTitle">Color picker</string>
     <string name="selectColorButtonTitle">Select color</string>
     <string name="addColorToPaletteButtonTitle">Add to palette</string>
 </resources>
