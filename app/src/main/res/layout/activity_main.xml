@@ -25,43 +25,53 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarStyle">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/buttonColorPicker"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Color"
+                app:srcCompat="@drawable/ic_color_lens_24dp"
+                style="?android:attr/buttonBarButtonStyle"
                 android:onClick="showColorPicker"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/buttonGrid"
-                android:layout_width="match_parent"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/hideGridButtonTitle"
-                android:onClick="hideGrid"/>
+                android:onClick="hideGrid"
+                app:srcCompat="@drawable/ic_grid_on_24dp" />
 
-            <Button
+            <ImageButton
+                android:id="@+id/buttonSelectedColor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_border_color_24dp"
+                style="?android:attr/buttonBarButtonStyle"/>
+
+            <ImageButton
                 android:id="@+id/buttonClearCanvas"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="clearCanvas"
-                android:text="@string/clearCanvasButtonTitle"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button" />
-        </LinearLayout>
+                app:srcCompat="@drawable/ic_clear_24dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:onClick="clearCanvas"/>
 
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            app:itemBackground="@color/colorPrimary"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            app:menu="@layout/bottom_navigation" />
+            <ImageButton
+                android:id="@+id/settingsButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_settings_24dp"
+                style="?android:attr/buttonBarButtonStyle" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

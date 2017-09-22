@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.madrapps.pikolo.HSLColorPicker;
@@ -14,10 +15,11 @@ import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 public class AndroidCanvasExample extends AppCompatActivity {
 
     private CanvasView customCanvas;
-    private Button gridButton;
+    private ImageButton gridButton;
     private HSLColorPicker picker;
     private ImageView image;
     private Button selectButton;
+    private ImageButton selectedColorButton;
     private int selectedColor;
 
     @Override
@@ -26,7 +28,8 @@ public class AndroidCanvasExample extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         customCanvas = (CanvasView) findViewById(R.id.signature_canvas);
-        gridButton = (Button) findViewById(R.id.buttonGrid);
+        selectedColorButton = (ImageButton) findViewById(R.id.buttonSelectedColor);
+        gridButton = (ImageButton) findViewById(R.id.buttonGrid);
         image = (ImageView) findViewById(R.id.imageViewActualColor);
     }
 
@@ -51,6 +54,7 @@ public class AndroidCanvasExample extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Settings.getInstance().setColor(selectedColor);
+                selectedColorButton.setColorFilter(selectedColor, PorterDuff.Mode.SRC_IN);
                 dialog.dismiss();
             }
         });
@@ -64,7 +68,7 @@ public class AndroidCanvasExample extends AppCompatActivity {
 
     public void hideGrid(View v) {
         customCanvas.hideGrid();
-        gridButton.setText(R.string.showGridButtonTitle);
+        gridButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_grid_off_24dp));
         gridButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +79,7 @@ public class AndroidCanvasExample extends AppCompatActivity {
 
     public void showGrid(View v) {
         customCanvas.showGrid();
-        gridButton.setText(R.string.hideGridButtonTitle);
+        gridButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_grid_on_24dp));
         gridButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
