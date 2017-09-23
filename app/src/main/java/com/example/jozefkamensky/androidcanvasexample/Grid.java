@@ -1,6 +1,5 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
-import android.graphics.Paint;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class Grid {
         int tileY = ((int)y - startY) / tileSize;
         if (tileX < 0 || tileX >= width) return;
         if (tileY < 0 || tileY >= height) return;
-        tiles[tileY][tileX].setColor(color);
+        tiles[tileY][tileX].setPaint(color);
     }
 
     public float[] getGridLinesCoordinates(){
@@ -99,7 +98,7 @@ public class Grid {
         return res;
     }
 
-    public List<Tile> getGridTiles(){
+    public List<Tile> getGridTilesAsList(){
 
         List<Tile> res = new ArrayList<>();
 
@@ -111,7 +110,27 @@ public class Grid {
         return res;
     }
 
+    public Tile[][] getGridTiles(){
+        return tiles.clone();
+    }
+
     public int getTileSize(){
         return tileSize;
+    }
+
+    public int getStartX() {
+        return startX;
+    }
+
+    public int getStartY() {
+        return startY;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

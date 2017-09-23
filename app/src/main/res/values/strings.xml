@@ -7,4 +7,28 @@
     <string name="colorPickerTitle">Color picker</string>
     <string name="selectColorButtonTitle">Select color</string>
     <string name="addColorToPaletteButtonTitle">Add to palette</string>
+
+    <string name="settingsTitle">Settings</string>
+    <string name="settingWidthInTilesText">Width in Tiles</string>
+    <string name="settingHeightInTilesText">Height in Tiles</string>
+    <string name="settingTileToPixelText">Size of tile in px</string>
+    <string name="settingSaveValuesButton">Save settings</string>
+    <string name="settingsSaveSuccessfulMessage">Settings saved</string>
+    <string-array name="settingsGridWidthDimensions">
+        <item>8</item>
+        <item>16</item>
+        <item>24</item>
+        <item>32</item>
+    </string-array>
+    <string-array name="settingsGridHeightDimensions">
+        <item>8</item>
+        <item>16</item>
+        <item>24</item>
+        <item>32</item>
+    </string-array>
+    <string-array name="settingsTileToPixelConversion">
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+    </string-array>
 </resources>

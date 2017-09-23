@@ -7,7 +7,9 @@ package com.example.jozefkamensky.androidcanvasexample;
 public class Settings {
 
     private int color = -12533825;
-    private int exportPixelPerTile = 4;
+    private int exportPixelsPerTile = 4;
+    private int gridWidthInTiles = 8;
+    private int gridHeightInTiles = 8;
 
     private static final Settings ourInstance = new Settings();
 
@@ -28,5 +30,29 @@ public class Settings {
 
     public void setColor(int clr){
         color = clr;
+    }
+
+    public int getExportPixelsPerTile() {
+        return exportPixelsPerTile;
+    }
+
+    public void setExportPixelsPerTile(int exportPixelsPerTile) {
+        this.exportPixelsPerTile = exportPixelsPerTile;
+    }
+
+    public int getGridWidthInTiles() {
+        return gridWidthInTiles;
+    }
+
+    public void setGridWidthInTiles(int gridWidthInTiles) {
+        this.gridWidthInTiles = gridWidthInTiles;
+    }
+
+    public int getGridHeightInTiles() {
+        return gridHeightInTiles;
+    }
+
+    public void setGridHeightInTiles(int gridHeightInTiles) {
+        this.gridHeightInTiles = gridHeightInTiles;
     }
 }

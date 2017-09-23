@@ -51,7 +51,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ic_border_color_24dp"
+                app:srcCompat="@drawable/ic_brush_24dp"
                 style="?android:attr/buttonBarButtonStyle"/>
 
             <ImageButton
@@ -69,7 +69,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_settings_24dp"
-                style="?android:attr/buttonBarButtonStyle" />
+                style="?android:attr/buttonBarButtonStyle"
+                android:onClick="openSettings"/>
+
+            <ImageButton
+                android:id="@+id/exportButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_save_24dp"
+                style="?android:attr/buttonBarButtonStyle"
+                android:onClick="exportImage"/>
 
         </LinearLayout>
 

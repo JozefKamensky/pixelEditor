@@ -16,7 +16,7 @@ public class Tile {
         this.x = x;
         this.y = y;
         paint = new Paint();
-        setColor(255,255,255,0);
+        setColor(255,255,255, 0);
     }
 
     public int getX() {
@@ -32,11 +32,11 @@ public class Tile {
         paint.setColor(color);
     }
 
-    public void setColor(int color){
+    public void setPaint(int color){
         paint.setColor(color);
     }
 
-    public Paint getColor(){
+    public Paint getPaint(){
         return paint;
     }
 
