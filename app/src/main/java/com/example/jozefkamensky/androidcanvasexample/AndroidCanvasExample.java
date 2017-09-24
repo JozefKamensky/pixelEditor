@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,7 +16,7 @@ import android.widget.Toast;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 
-public class AndroidCanvasExample extends AppCompatActivity {
+public class AndroidCanvasExample extends AppCompatActivity{
 
     private CanvasView customCanvas;
     private ImageButton gridButton;
@@ -22,6 +24,10 @@ public class AndroidCanvasExample extends AppCompatActivity {
     private ImageView image;
     private Button selectButton;
     private ImageButton selectedColorButton;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private PalleteRecyclerAdapter pAdapter;
+
     private int selectedColor;
 
     @Override
@@ -34,6 +40,11 @@ public class AndroidCanvasExample extends AppCompatActivity {
         changeSelectedColorVisualization(Settings.getInstance().getColor());
         gridButton = (ImageButton) findViewById(R.id.buttonGrid);
         image = (ImageView) findViewById(R.id.imageViewActualColor);
+        mRecyclerView = (RecyclerView) findViewById(R.id.colorList);
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
+        mRecyclerView.setAdapter(pAdapter);
     }
 
     public void showColorPicker(View w){
@@ -101,8 +112,8 @@ public class AndroidCanvasExample extends AppCompatActivity {
         final Spinner height = (Spinner) dialog.findViewById(R.id.spinnerHeightInTiles);
         final Spinner tileToPx = (Spinner) dialog.findViewById(R.id.spinnerTileToPixel);
 
-        width.setSelection(1);
-        height.setSelection(1);
+        width.setSelection(3);
+        height.setSelection(3);
         tileToPx.setSelection(1);
 
         Button save = (Button) dialog.findViewById(R.id.saveSettingsButton);
@@ -138,6 +149,9 @@ public class AndroidCanvasExample extends AppCompatActivity {
 
     public void exportImage(View v){
         customCanvas.exportImage("test1");
+    }
+
+    public void showPallete(View v){
     }
 
     private void changeSelectedColorVisualization(int color){

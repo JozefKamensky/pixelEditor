@@ -7,9 +7,15 @@ package com.example.jozefkamensky.androidcanvasexample;
 public class Settings {
 
     private int color = -12533825;
-    private int exportPixelsPerTile = 4;
-    private int gridWidthInTiles = 8;
-    private int gridHeightInTiles = 8;
+
+    // these settings should use values from arrays:
+    //  - settingsGridWidthDimensions
+    //  - settingsGridHeightDimensions
+    //  - settingsTileToPixelConversion
+
+    private int exportPixelsPerTile = 2;
+    private int gridWidthInTiles = 18;
+    private int gridHeightInTiles = 18;
 
     private static final Settings ourInstance = new Settings();
 
