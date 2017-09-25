@@ -1,13 +1,17 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -150,7 +154,26 @@ public class AndroidCanvasExample extends AppCompatActivity{
     }
 
     public void exportImage(View v){
-        customCanvas.exportImage("test1");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.exportImageTitle));
+        final EditText imageName = new EditText(this);
+        imageName.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        builder.setView(imageName);
+        builder.setPositiveButton(R.string.exportImageExportButton, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                customCanvas.exportImage(imageName.getText().toString());
+            }
+        });
+        builder.setNegativeButton(R.string.exportImageCancelButton, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void changeSelectedColorVisualization(int color){
