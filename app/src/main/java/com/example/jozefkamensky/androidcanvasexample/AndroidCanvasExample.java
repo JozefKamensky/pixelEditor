@@ -134,14 +134,10 @@ public class AndroidCanvasExample extends AppCompatActivity{
         height.setSelection(2);
         tileToPx.setSelection(1);
 
-        int selectedWidth = Integer.parseInt(width_size_values[width.getSelectedItemPosition()]);
-        int selectedHeight = Integer.parseInt(height_size_values[height.getSelectedItemPosition()]);
-        int selectedPixelsPreTile = Integer.parseInt(conversion_values[tileToPx.getSelectedItemPosition()]);
-
         width.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //selectedWidth = Integer.valueOf(width_size_values[width.getSelectedItemPosition()]);
+                Integer.valueOf(width_size_values[width.getSelectedItemPosition()]);
             }
         });
 

@@ -17,6 +17,10 @@ public class Settings {
     private int gridWidthInTiles = 12;
     private int gridHeightInTiles = 12;
 
+    private int tmpExportPixelsPerTile = exportPixelsPerTile;
+    private int tmpGridWidthInTiles = gridWidthInTiles;
+    private int tmpGridHeightInTiles = gridHeightInTiles;
+
     private static final Settings ourInstance = new Settings();
 
     public static Settings getInstance() {
