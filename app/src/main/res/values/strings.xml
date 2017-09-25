@@ -14,6 +14,8 @@
     <string name="settingTileToPixelText">Size of tile in px</string>
     <string name="settingSaveValuesButton">Save settings</string>
     <string name="settingsSaveSuccessfulMessage">Settings saved</string>
+    <string name="settingsResultImageDimensions">Result image: {{0}} x {{1}} px</string>
+
     <string-array name="settingsGridWidthDimensions">
         <item>6</item>
         <item>9</item>

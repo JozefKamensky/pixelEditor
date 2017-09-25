@@ -6,15 +6,22 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class AndroidCanvasExample extends AppCompatActivity{
 
@@ -47,6 +54,8 @@ public class AndroidCanvasExample extends AppCompatActivity{
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
+
+        //onStart();
     }
 
     public void showColorPicker(View w){
@@ -63,15 +72,17 @@ public class AndroidCanvasExample extends AppCompatActivity{
             public void onColorSelected(int color) {
                 // Do whatever you want with the color
                 image.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-                selectedColor = color;
+//                selectedColor = color;
+                EventBus.getDefault().post(new ColorChangeEvent(color));
             }
         });
 
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Settings.getInstance().setColor(selectedColor);
-                changeSelectedColorVisualization(selectedColor);
+//                Settings.getInstance().setColor(selectedColor);
+//                changeSelectedColorVisualization(selectedColor);
+//                EventBus.getDefault().post(new ColorChangeEvent(selectedColor));
                 dialog.dismiss();
             }
         });
@@ -113,10 +124,40 @@ public class AndroidCanvasExample extends AppCompatActivity{
         final Spinner width = (Spinner) dialog.findViewById(R.id.spinnerWidthInTiles);
         final Spinner height = (Spinner) dialog.findViewById(R.id.spinnerHeightInTiles);
         final Spinner tileToPx = (Spinner) dialog.findViewById(R.id.spinnerTileToPixel);
+        final TextView resultImageDimension = (TextView) dialog.findViewById(R.id.resultImageDimensions);
 
-        width.setSelection(3);
-        height.setSelection(3);
+        final String[] width_size_values = getResources().getStringArray(R.array.settingsGridWidthDimensions);
+        final String[] height_size_values = getResources().getStringArray(R.array.settingsGridHeightDimensions);
+        final String[] conversion_values = getResources().getStringArray(R.array.settingsTileToPixelConversion);
+
+        width.setSelection(2);
+        height.setSelection(2);
         tileToPx.setSelection(1);
+
+        int selectedWidth = Integer.parseInt(width_size_values[width.getSelectedItemPosition()]);
+        int selectedHeight = Integer.parseInt(height_size_values[height.getSelectedItemPosition()]);
+        int selectedPixelsPreTile = Integer.parseInt(conversion_values[tileToPx.getSelectedItemPosition()]);
+
+        width.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //selectedWidth = Integer.valueOf(width_size_values[width.getSelectedItemPosition()]);
+            }
+        });
+
+        height.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Settings.getInstance().setGridHeightInTiles(Integer.valueOf(height_size_values[height.getSelectedItemPosition()]));
+            }
+        });
+
+        tileToPx.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Settings.getInstance().setExportPixelsPerTile(Integer.valueOf(conversion_values[tileToPx.getSelectedItemPosition()]));
+            }
+        });
 
         Button save = (Button) dialog.findViewById(R.id.saveSettingsButton);
         save.setOnClickListener(new View.OnClickListener() {
@@ -127,18 +168,16 @@ public class AndroidCanvasExample extends AppCompatActivity{
                 int selectedValue;
 
                 selectedPos = width.getSelectedItemPosition();
-                String[] size_values = getResources().getStringArray(R.array.settingsGridWidthDimensions);
-                selectedValue = Integer.valueOf(size_values[selectedPos]);
+                selectedValue = Integer.valueOf(width_size_values[selectedPos]);
                 s.setGridWidthInTiles(selectedValue);
 
                 selectedPos = height.getSelectedItemPosition();
-                size_values = getResources().getStringArray(R.array.settingsGridHeightDimensions);
-                selectedValue = Integer.valueOf(size_values[selectedPos]);
+
+                selectedValue = Integer.valueOf(height_size_values[selectedPos]);
                 s.setGridHeightInTiles(selectedValue);
 
                 selectedPos = tileToPx.getSelectedItemPosition();
-                size_values = getResources().getStringArray(R.array.settingsTileToPixelConversion);
-                selectedValue = Integer.valueOf(size_values[selectedPos]);
+                selectedValue = Integer.valueOf(conversion_values[selectedPos]);
                 s.setExportPixelsPerTile(selectedValue);
                 Toast.makeText(view.getContext(), getResources().getString(R.string.settingsSaveSuccessfulMessage), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
@@ -155,5 +194,24 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
     private void changeSelectedColorVisualization(int color){
         selectedColorButton.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ColorChangeEvent event) {
+        Log.e("COLOR_CHANGE_EVENT", "new color: " + event.color);
+        Settings.getInstance().setColor(event.color);
+        changeSelectedColorVisualization(event.color);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

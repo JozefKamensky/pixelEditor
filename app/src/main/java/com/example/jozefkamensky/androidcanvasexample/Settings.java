@@ -14,8 +14,8 @@ public class Settings {
     //  - settingsTileToPixelConversion
 
     private int exportPixelsPerTile = 2;
-    private int gridWidthInTiles = 18;
-    private int gridHeightInTiles = 18;
+    private int gridWidthInTiles = 12;
+    private int gridHeightInTiles = 12;
 
     private static final Settings ourInstance = new Settings();
 

@@ -10,7 +10,7 @@
 
     <com.madrapps.pikolo.HSLColorPicker
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:id="@+id/HSLColorPicker"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
@@ -23,7 +23,9 @@
         pikolo:lightness_start_angle="270"
         pikolo:radius_offset="20dp"
         pikolo:saturation_indicator_stroke_color="@color/colorPrimary"
-        pikolo:saturation_start_angle="150"/>
+        pikolo:saturation_start_angle="150"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
     <ImageView
         android:id="@+id/imageViewActualColor"
@@ -68,7 +70,6 @@
         app:layout_constraintTop_toBottomOf="@+id/HSLColorPicker"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginRight="0dp"
         android:layout_marginBottom="8dp" />
 
 

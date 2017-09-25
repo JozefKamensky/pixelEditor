@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 /**
@@ -27,8 +29,6 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
         private ImageView mItemImageView;
         private int mColor;
 
-        private static final String COLOR_KEY = "COLOR";
-
         //4
         public ColorHolder(View v) {
             super(v);
@@ -40,12 +40,27 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
         @Override
         public void onClick(View v) {
             Log.e("HOLDER", "CLICK! color: " + mColor + " adapterPosition: "+ getAdapterPosition());
+            //Toast.makeText(v.getContext(), ColorToString(mColor) + ", position: "+ getAdapterPosition(), Toast.LENGTH_LONG).show();
+            EventBus.getDefault().post(new ColorChangeEvent(mColor));
         }
 
         public void bindColor(int color) {
             Log.e("HOLDER", "BIND COLOR "+color);
             mColor = color;
             mItemImageView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        }
+        private String ColorToString(int color){
+            Log.e("COLOR_CONVERSION", "ColorInt: " + color + ", ColorBinary: " + Integer.toBinaryString(color));
+            int a = color >> 24;
+            a = (a >> 24) & 0xff;
+            int r = color << 8;
+            r = (r >> 24) & 0xff;
+            int g = color << 16;
+            g = (g >> 24) & 0xff;
+            int b = color << 24;
+            b = (b >> 24) & 0xff;
+
+            return "R: " + r + ", G: " + g + ", B: " + b + ", A: " + a;
         }
     }
 
@@ -57,7 +72,7 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
     }
 
     @Override
-    public void onBindViewHolder(PalleteRecyclerAdapter.ColorHolder holder, int position) {
+    public void onBindViewHolder(final PalleteRecyclerAdapter.ColorHolder holder, int position) {
         int color = mColors.get(position);
         holder.bindColor(color);
     }
