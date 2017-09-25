@@ -10,11 +10,8 @@
         android:right="2dp"
         android:bottom="2dp" />
     <size
-        android:width="24dp"
-        android:height="24dp" />
+        android:width="36dp"
+        android:height="36dp" />
     <solid
         android:color="#FFFFFF" />
-    <stroke
-        android:width="2dp"
-        android:color="@color/colorPrimaryDark" />
 </shape>

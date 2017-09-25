@@ -28,7 +28,7 @@ public class Tile {
     }
 
     public void setColor(int R, int G, int B, int A){
-        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 16 | (B & 0xff);
+        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
         paint.setColor(color);
     }
 

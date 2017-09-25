@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
 
     public static class ColorHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //2
-        private ImageButton mItemImageButton;
+        private ImageView mItemImageView;
         private int mColor;
 
         private static final String COLOR_KEY = "COLOR";
@@ -33,27 +33,19 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
         public ColorHolder(View v) {
             super(v);
             Log.e("HOLDER", "CREATE!");
-            mItemImageButton = (ImageButton) v.findViewById(R.id.colorPalleteItem);
+            mItemImageView = (ImageView) v.findViewById(R.id.colorPalleteItem);
             v.setOnClickListener(this);
-            mItemImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-
         }
 
         @Override
         public void onClick(View v) {
             Log.e("HOLDER", "CLICK! color: " + mColor + " adapterPosition: "+ getAdapterPosition());
-            mItemImageButton.getBackground().setColorFilter(mColor, PorterDuff.Mode.SRC_IN);
         }
 
         public void bindColor(int color) {
             Log.e("HOLDER", "BIND COLOR "+color);
             mColor = color;
-            mItemImageButton.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+            mItemImageView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
     }
 

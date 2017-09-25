@@ -18,20 +18,20 @@ public class Pallete {
 
     private Pallete() {
         colors = new ArrayList<>();
-        addRGBAColor(255,255,255,0);
-        addRGBAColor(0,0,0,0);
+        addRGBAColor(255,255,255,255);
+        addRGBAColor(0,0,0,255);
 
-        addRGBAColor(255,0,0,0);
-        addRGBAColor(0,255,0,0);
-        addRGBAColor(0,0,255,0);
+        addRGBAColor(255,0,0,255);
+        addRGBAColor(0,255,0,255);
+        addRGBAColor(0,0,255,255);
 
-        addRGBAColor(255,255,0,0);
-        addRGBAColor(255,0,255,0);
-        addRGBAColor(0,255,255,0);
+        addRGBAColor(255,255,0,255);
+        addRGBAColor(255,0,255,255);
+        addRGBAColor(0,255,255,255);
     }
 
     private int convertColorFromRGBAToInt(int R, int G, int B, int A){
-        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 16 | (B & 0xff);
+        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
         return color;
     }
 

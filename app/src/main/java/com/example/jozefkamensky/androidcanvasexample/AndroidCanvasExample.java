@@ -38,8 +38,10 @@ public class AndroidCanvasExample extends AppCompatActivity{
         customCanvas = (CanvasView) findViewById(R.id.signature_canvas);
         selectedColorButton = (ImageButton) findViewById(R.id.buttonSelectedColor);
         changeSelectedColorVisualization(Settings.getInstance().getColor());
+
         gridButton = (ImageButton) findViewById(R.id.buttonGrid);
         image = (ImageView) findViewById(R.id.imageViewActualColor);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.colorList);
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -149,9 +151,6 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
     public void exportImage(View v){
         customCanvas.exportImage("test1");
-    }
-
-    public void showPallete(View v){
     }
 
     private void changeSelectedColorVisualization(int color){

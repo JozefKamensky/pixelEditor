@@ -58,8 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_brush_24dp"
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="showPallete"/>
+                style="?android:attr/buttonBarButtonStyle"/>
 
             <ImageButton
                 android:id="@+id/buttonClearCanvas"
