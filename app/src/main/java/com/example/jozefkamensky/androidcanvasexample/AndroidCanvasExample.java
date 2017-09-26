@@ -1,15 +1,18 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -54,8 +57,6 @@ public class AndroidCanvasExample extends AppCompatActivity{
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
-
-        //onStart();
     }
 
     public void showColorPicker(View w){
