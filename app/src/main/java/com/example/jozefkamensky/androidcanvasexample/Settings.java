@@ -13,9 +13,9 @@ public class Settings {
     //  - settingsGridHeightDimensions
     //  - settingsTileToPixelConversion
 
-    private int exportPixelsPerTile = 3;
-    private int gridWidthInTiles = 12;
-    private int gridHeightInTiles = 12;
+    private int exportPixelsPerTile = 2;
+    private int gridWidthInTiles = 6;
+    private int gridHeightInTiles = 6;
 
     //temporary values used for changing settings alert dialog
     private int tmpExportPixelsPerTile = exportPixelsPerTile;

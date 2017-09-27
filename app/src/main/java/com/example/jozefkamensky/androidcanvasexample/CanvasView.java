@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Created by jozef.kamensky on 20.9.2017.
@@ -57,6 +56,7 @@ public class CanvasView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
+        Log.d("GRID", "onSizeChanged!");
         // your Canvas will draw onto the defined Bitmap
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
@@ -135,6 +135,7 @@ public class CanvasView extends View {
     }
 
     public void initGrid(){
+        Log.d("GRID", "initGrid!");
         Settings s = Settings.getInstance();
         grid = new Grid(s.getGridWidthInTiles(), s.getGridHeightInTiles(), mCanvas.getWidth(), mCanvas.getHeight());
         gridCoordinates = grid.getGridLinesCoordinates();
@@ -160,11 +161,6 @@ public class CanvasView extends View {
         Log.d("EXPORT", "bitmap width: " + exportBitmap.getWidth());
 
         Tile[][] tiles = grid.getGridTiles();
-        List<Tile> tiles2 = grid.getGridTilesAsList();
-        Log.d("EXPORT", "top left corner color array (var): " + tiles[0][0].getPaint().getColor() );
-        Log.d("EXPORT", "top left corner color list (var): " + tiles2.get(0).getPaint().getColor() );
-
-        Log.d("EXPORT", "top left corner color array (not var): " + grid.getGridTiles()[0][0].getPaint().getColor() );
 
         for (int y = 0; y < grid.getHeight(); y++){
             for (int x = 0; x < grid.getWidth(); x++){
@@ -182,10 +178,9 @@ public class CanvasView extends View {
         OutputStream fOut = null;
 
         // the File to save
-        File file = new File(path, name+".png");
+        File file = new File(path, name + ".png");
         try {
             fOut = new FileOutputStream(file);
-
             exportBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush(); // Not really required
             fOut.close(); // do not forget to close the stream

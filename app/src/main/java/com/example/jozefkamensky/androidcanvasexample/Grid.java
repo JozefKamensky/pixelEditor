@@ -19,6 +19,7 @@ public class Grid {
     private int height;
 
     private Tile[][] tiles;
+    private int[][] tilesInt;
 
     private int startX;
     private int startY;
@@ -29,21 +30,26 @@ public class Grid {
 
         this.width = widthInTiles;
         this.height = heightInTiles;
-        Log.e("GRID_CONSTRUCTOR", "Grid width: " + width);
-        Log.e("GRID_CONSTRUCTOR", "Grid height: " + height);
+        Log.d("GRID_CONSTRUCTOR", "Grid width: " + width);
+        Log.d("GRID_CONSTRUCTOR", "Grid height: " + height);
 
         int tileSize1 = (viewWidth - 2 * minPaddingHorizontal) / widthInTiles;
         int tileSize2 = (viewHeight - 2 * minPaddingVertical) / heightInTiles;
         this.tileSize = (tileSize1 < tileSize2) ? tileSize1 : tileSize2;
-        Log.e("GRID_CONSTRUCTOR", "Grid tile size: " + tileSize);
+        Log.d("GRID_CONSTRUCTOR", "Grid tile size: " + tileSize);
 
         startX = (viewWidth - widthInTiles * tileSize) / 2;
         startY = (viewHeight - heightInTiles * tileSize) / 2;
 
         tiles = new Tile[heightInTiles][widthInTiles];
+        tilesInt = new int[heightInTiles][widthInTiles];
+
+        //int transparentWhite = RGBtoIntColor(255,255,255, 0);
+        int color = RGBtoIntColor(255,255,0,255);
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
                 tiles[i][j] = new Tile(startX + j * tileSize, startY + i * tileSize);
+                tilesInt[i][j] = color;
             }
         }
     }
@@ -55,6 +61,8 @@ public class Grid {
         if (tileX < 0 || tileX >= width) return;
         if (tileY < 0 || tileY >= height) return;
         tiles[tileY][tileX].setPaint(color);
+        tilesInt[tileY][tileX] = color;
+        Log.d("TILES", "tile (" + tileX + ", " + tileY + "), color: " + tilesInt[tileY][tileX]);
     }
 
     public float[] getGridLinesCoordinates(){
@@ -115,6 +123,14 @@ public class Grid {
         return tiles;
     }
 
+    public int[][] getGridTilesInt(){
+        return tilesInt;
+    }
+
+    public int getColorOfTile(int x, int y){
+        return tilesInt[y][x];
+    }
+
     public int getTileSize(){
         return tileSize;
     }
@@ -133,5 +149,9 @@ public class Grid {
 
     public int getHeight() {
         return height;
+    }
+
+    public int RGBtoIntColor(int R, int G, int B, int A){
+        return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
     }
 }

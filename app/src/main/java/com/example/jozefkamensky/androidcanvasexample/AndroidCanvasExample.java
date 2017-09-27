@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -207,7 +208,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
     }
 
     public void exportImage(View v){
-
+        Log.d("EXPORT", "exportImage dialog!");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.exportImageTitle));
         final EditText imageName = new EditText(this);
@@ -218,6 +219,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 customCanvas.exportImage(imageName.getText().toString());
+                Log.d("EXPORT", "exportImage button click!");
             }
         });
         builder.setNegativeButton(R.string.exportImageCancelButton, new DialogInterface.OnClickListener() {
