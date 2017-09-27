@@ -2,6 +2,7 @@ package com.example.jozefkamensky.androidcanvasexample;
 
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 /**
  * Created by jozef.kamensky on 20.9.2017.
@@ -34,6 +35,7 @@ public class Tile {
 
     public void setPaint(int color){
         paint.setColor(color);
+        Log.d("TILE", "setPaint to color: " + paint.getColor());
     }
 
     public Paint getPaint(){

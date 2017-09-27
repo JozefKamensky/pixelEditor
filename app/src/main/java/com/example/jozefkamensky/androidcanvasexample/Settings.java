@@ -13,10 +13,11 @@ public class Settings {
     //  - settingsGridHeightDimensions
     //  - settingsTileToPixelConversion
 
-    private int exportPixelsPerTile = 2;
+    private int exportPixelsPerTile = 3;
     private int gridWidthInTiles = 12;
     private int gridHeightInTiles = 12;
 
+    //temporary values used for changing settings alert dialog
     private int tmpExportPixelsPerTile = exportPixelsPerTile;
     private int tmpGridWidthInTiles = gridWidthInTiles;
     private int tmpGridHeightInTiles = gridHeightInTiles;
@@ -64,5 +65,29 @@ public class Settings {
 
     public void setGridHeightInTiles(int gridHeightInTiles) {
         this.gridHeightInTiles = gridHeightInTiles;
+    }
+
+    public int getTmpExportPixelsPerTile() {
+        return tmpExportPixelsPerTile;
+    }
+
+    public void setTmpExportPixelsPerTile(int tmpExportPixelsPerTile) {
+        this.tmpExportPixelsPerTile = tmpExportPixelsPerTile;
+    }
+
+    public int getTmpGridWidthInTiles() {
+        return tmpGridWidthInTiles;
+    }
+
+    public void setTmpGridWidthInTiles(int tmpGridWidthInTiles) {
+        this.tmpGridWidthInTiles = tmpGridWidthInTiles;
+    }
+
+    public int getTmpGridHeightInTiles() {
+        return tmpGridHeightInTiles;
+    }
+
+    public void setTmpGridHeightInTiles(int tmpGridHeightInTiles) {
+        this.tmpGridHeightInTiles = tmpGridHeightInTiles;
     }
 }

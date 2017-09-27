@@ -131,28 +131,49 @@ public class AndroidCanvasExample extends AppCompatActivity{
         final String[] height_size_values = getResources().getStringArray(R.array.settingsGridHeightDimensions);
         final String[] conversion_values = getResources().getStringArray(R.array.settingsTileToPixelConversion);
 
-        width.setSelection(2);
-        height.setSelection(2);
-        tileToPx.setSelection(1);
+        int width_selected_index = findInArray(width_size_values, String.valueOf(Settings.getInstance().getGridWidthInTiles()));
+        int height_selected_index = findInArray(height_size_values, String.valueOf(Settings.getInstance().getGridHeightInTiles()));
+        int pixels_selected_index = findInArray(conversion_values, String.valueOf(Settings.getInstance().getExportPixelsPerTile()));
 
-        width.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        width.setSelection( (width_selected_index == -1) ? 2 : width_selected_index );
+        height.setSelection( (height_selected_index == -1) ? 2 : height_selected_index );
+        tileToPx.setSelection( (pixels_selected_index == -1) ? 2 : pixels_selected_index );
+
+        width.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Integer.valueOf(width_size_values[width.getSelectedItemPosition()]);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Settings.getInstance().setTmpGridWidthInTiles(Integer.valueOf(width_size_values[width.getSelectedItemPosition()]));
+                updateText(resultImageDimension);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        height.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        height.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Settings.getInstance().setGridHeightInTiles(Integer.valueOf(height_size_values[height.getSelectedItemPosition()]));
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Settings.getInstance().setTmpGridHeightInTiles(Integer.valueOf(height_size_values[height.getSelectedItemPosition()]));
+                updateText(resultImageDimension);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
-        tileToPx.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        tileToPx.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Settings.getInstance().setExportPixelsPerTile(Integer.valueOf(conversion_values[tileToPx.getSelectedItemPosition()]));
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Settings.getInstance().setTmpExportPixelsPerTile(Integer.valueOf(conversion_values[tileToPx.getSelectedItemPosition()]));
+                updateText(resultImageDimension);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -186,7 +207,26 @@ public class AndroidCanvasExample extends AppCompatActivity{
     }
 
     public void exportImage(View v){
-        customCanvas.exportImage("test1");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getString(R.string.exportImageTitle));
+        final EditText imageName = new EditText(this);
+        imageName.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        builder.setView(imageName);
+        builder.setPositiveButton(R.string.exportImageExportButton, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                customCanvas.exportImage(imageName.getText().toString());
+            }
+        });
+        builder.setNegativeButton(R.string.exportImageCancelButton, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void changeSelectedColorVisualization(int color){
@@ -195,7 +235,6 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ColorChangeEvent event) {
-        Log.e("COLOR_CHANGE_EVENT", "new color: " + event.color);
         Settings.getInstance().setColor(event.color);
         changeSelectedColorVisualization(event.color);
     }
@@ -210,5 +249,24 @@ public class AndroidCanvasExample extends AppCompatActivity{
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    private void updateText(TextView textView){
+        int tmpWidth = Settings.getInstance().getTmpGridWidthInTiles();
+        int tmpHeight = Settings.getInstance().getTmpGridHeightInTiles();
+        int tmpPixels = Settings.getInstance().getTmpExportPixelsPerTile();
+        String message = getResources().getString(R.string.settingsResultImageDimensions);
+        message = message.replace("{{0}}", String.valueOf( tmpWidth * tmpPixels));
+        message = message.replace("{{1}}", String.valueOf( tmpHeight * tmpPixels));
+        textView.setText(message);
+    }
+
+    private int findInArray(String[] array, String value){
+        for (int i = 0; i < array.length; i++){
+            if (array[i].equals(value)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

@@ -111,7 +111,8 @@ public class Grid {
     }
 
     public Tile[][] getGridTiles(){
-        return tiles.clone();
+        Log.d("TILE", "GRID - top left corner color: " + tiles[0][0].getPaint().getColor());
+        return tiles;
     }
 
     public int getTileSize(){

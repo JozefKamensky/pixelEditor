@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -17,8 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import static android.content.ContentValues.TAG;
+import java.util.List;
 
 /**
  * Created by jozef.kamensky on 20.9.2017.
@@ -148,32 +146,39 @@ public class CanvasView extends View {
 
         int pixelsPerTile = s.getExportPixelsPerTile();
         int widthInPixels = grid.getWidth() * pixelsPerTile;
-        int heigthInPixels = grid.getHeight() * pixelsPerTile;
+        int heightInPixels = grid.getHeight() * pixelsPerTile;
 
-        Log.e("EXPORT", "fileName: " + name);
-        Log.e("EXPORT", "width: " + grid.getWidth());
-        Log.e("EXPORT", "width in pixels: " + widthInPixels);
-        Log.e("EXPORT", "height: " + grid.getHeight());
-        Log.e("EXPORT", "height in pixels: " + heigthInPixels);
-        Log.e("EXPORT", "total pixels: " + (widthInPixels * heigthInPixels));
+        Log.d("EXPORT", "fileName: " + name);
+        Log.d("EXPORT", "width: " + grid.getWidth());
+        Log.d("EXPORT", "width in pixels: " + widthInPixels);
+        Log.d("EXPORT", "height: " + grid.getHeight());
+        Log.d("EXPORT", "height in pixels: " + heightInPixels);
+        Log.d("EXPORT", "total pixels: " + (widthInPixels * heightInPixels));
 
-        Bitmap exportBitmap = Bitmap.createBitmap(widthInPixels, heigthInPixels, Bitmap.Config.ARGB_8888);
-        Log.e("EXPORT", "bitmap height: " + exportBitmap.getHeight());
-        Log.e("EXPORT", "bitmap width: " + exportBitmap.getWidth());
+        Bitmap exportBitmap = Bitmap.createBitmap(widthInPixels, heightInPixels, Bitmap.Config.ARGB_8888);
+        Log.d("EXPORT", "bitmap height: " + exportBitmap.getHeight());
+        Log.d("EXPORT", "bitmap width: " + exportBitmap.getWidth());
 
         Tile[][] tiles = grid.getGridTiles();
-        for (int y = 0; y < heigthInPixels; y += pixelsPerTile){
-            for (int x = 0; x < widthInPixels; x += pixelsPerTile){
+        List<Tile> tiles2 = grid.getGridTilesAsList();
+        Log.d("EXPORT", "top left corner color array (var): " + tiles[0][0].getPaint().getColor() );
+        Log.d("EXPORT", "top left corner color list (var): " + tiles2.get(0).getPaint().getColor() );
+
+        Log.d("EXPORT", "top left corner color array (not var): " + grid.getGridTiles()[0][0].getPaint().getColor() );
+
+        for (int y = 0; y < grid.getHeight(); y++){
+            for (int x = 0; x < grid.getWidth(); x++){
                 for (int i = 0; i < pixelsPerTile; i++){
                     for (int j = 0; j < pixelsPerTile; j++){
-                        exportBitmap.setPixel(y + i, x + j, tiles[x][y].getPaint().getColor());
+                        exportBitmap.setPixel( (y * pixelsPerTile) + i, (x * pixelsPerTile) + j, tiles[x][y].getPaint().getColor() );
+                        Log.d("EXPORT", "bitmap x: " + ((x * pixelsPerTile) + j) + ", y: " + ((y * pixelsPerTile) + i) + ", color: " + tiles[x][y].getPaint().getColor());
                     }
                 }
             }
         }
 
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-        Log.e("EXPORT", "exportPath: " + path);
+        Log.d("EXPORT", "exportPath: " + path + name + ".png");
         OutputStream fOut = null;
 
         // the File to save
@@ -184,10 +189,13 @@ public class CanvasView extends View {
             exportBitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             fOut.flush(); // Not really required
             fOut.close(); // do not forget to close the stream
-            MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getAbsolutePath(), file.getName(),file.getName());
+            //MediaStore.Images.Media.insertImage(getContext().getContentResolver(), file.getAbsolutePath(), file.getName(),file.getName());
+            Toast.makeText(getContext(), "Export successful!", Toast.LENGTH_LONG).show();
+            Log.d("EXPORT", "Export successful!");
         }
         catch (IOException e){
-            Toast.makeText(getContext(), "Export failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Export failed!", Toast.LENGTH_LONG).show();
+            Log.d("EXPORT", "Export failed!");
             e.printStackTrace();
         }
 
