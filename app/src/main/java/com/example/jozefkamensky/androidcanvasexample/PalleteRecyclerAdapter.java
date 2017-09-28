@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.jozefkamensky.androidcanvasexample.Events.ColorChangeEvent;
+import com.example.jozefkamensky.androidcanvasexample.Events.RemoveFromPalleteEvent;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;

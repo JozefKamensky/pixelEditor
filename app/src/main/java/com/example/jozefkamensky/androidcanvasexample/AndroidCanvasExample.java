@@ -21,6 +21,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jozefkamensky.androidcanvasexample.Events.AddColorToPalleteEvent;
+import com.example.jozefkamensky.androidcanvasexample.Events.ColorChangeEvent;
+import com.example.jozefkamensky.androidcanvasexample.Events.RemoveFromPalleteEvent;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener;
 

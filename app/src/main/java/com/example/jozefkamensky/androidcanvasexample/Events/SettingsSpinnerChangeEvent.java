@@ -1,4 +1,4 @@
-package com.example.jozefkamensky.androidcanvasexample;
+package com.example.jozefkamensky.androidcanvasexample.Events;
 
 /**
  * Created by jozef.kamensky on 25.9.2017.
