@@ -1,6 +1,7 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -27,6 +28,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AndroidCanvasExample extends AppCompatActivity{
 
     private CanvasView customCanvas;
@@ -39,6 +46,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private PalleteRecyclerAdapter pAdapter;
+    private static final String fileName = "pallete_colors";
 
     private int selectedColor;
 
@@ -59,6 +67,16 @@ public class AndroidCanvasExample extends AppCompatActivity{
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
+
+        List<Integer> colors;
+        long start = System.currentTimeMillis();
+        saveToFile();
+        long end = System.currentTimeMillis();
+        Log.d("WRITE", "save to file duration: " + (end - start));
+        start = System.currentTimeMillis();
+        colors = readFromFile();
+        end = System.currentTimeMillis();
+        Log.d("READ", "read from file duration: " + (end - start));
     }
 
     public void showColorPicker(View w){
@@ -293,5 +311,57 @@ public class AndroidCanvasExample extends AppCompatActivity{
             }
         }
         return -1;
+    }
+
+    private void saveToFile(){
+        Log.d("WRITE", "write from file method start");
+        try {
+            FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+            for (Integer color : Pallete.getInstance().getColors()) {
+                fos.write(intToByteArray(color));
+                Log.d("WRITE", "writen to file: " + color + "\nbyte representation: " + intToByteArray(color));
+            }
+            fos.close();
+        } catch(IOException e){
+            Toast.makeText(getApplicationContext(), "Writing pallete colors to file interrupted", Toast.LENGTH_LONG).show();
+        }
+        Log.d("WRITE", "write from file method end");
+    }
+
+    private List<Integer> readFromFile(){
+        Log.d("READ", "read from file method start");
+        FileInputStream fos;
+        List<Integer> loadedIntColors = new ArrayList<>();
+        try {
+            fos = openFileInput(fileName);
+            Log.d("READ", "file opened");
+            Log.d("READ", "bytes in file: " + fos.available());
+            while(fos.available() > 0){
+                byte[] b = new byte[4];
+                fos.read(b);
+                Log.d("READ", "readFromFile: " + b);
+                int value = byteArrayToInt(b);
+                Log.d("READ", "converted int: " + value + "\nbytes: " + intToByteArray(value));
+                loadedIntColors.add(value);
+            }
+            fos.close();
+        } catch(IOException e){
+            Toast.makeText(getApplicationContext(), "Writing pallete colors to file interrupted", Toast.LENGTH_LONG).show();
+        }
+        Log.d("READ", "readFromFile: " + loadedIntColors.toString());
+        Log.d("READ", "read from file method end");
+        return loadedIntColors;
+    }
+
+    private int byteArrayToInt(byte[] b){
+        return (b[3] & 0xFF) + ((b[2] & 0xFF) << 8) + ((b[1] & 0xFF) << 16) + ((b[0] & 0xFF) << 24);
+    }
+    private byte[] intToByteArray(int i){
+        byte[] res = new byte[4];
+        res[3] = (byte) (i & 0xFF);
+        res[2] = (byte) ((i >> 8) & 0xFF);
+        res[1] = (byte) ((i >> 16) & 0xFF);
+        res[0] = (byte) ((i >> 24) & 0xFF);
+        return res;
     }
 }

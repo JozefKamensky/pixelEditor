@@ -1,5 +1,8 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
+import android.content.Context;
+
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
