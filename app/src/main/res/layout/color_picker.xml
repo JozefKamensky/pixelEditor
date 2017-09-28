@@ -10,7 +10,7 @@
 
     <com.madrapps.pikolo.HSLColorPicker
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:id="@+id/HSLColorPicker"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
@@ -31,7 +31,7 @@
         android:id="@+id/imageViewActualColor"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/bg_circle"
+        app:srcCompat="@drawable/bg_circle"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

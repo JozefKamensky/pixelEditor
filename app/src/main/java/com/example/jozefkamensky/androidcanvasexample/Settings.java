@@ -21,6 +21,7 @@ public class Settings {
     private int tmpExportPixelsPerTile = exportPixelsPerTile;
     private int tmpGridWidthInTiles = gridWidthInTiles;
     private int tmpGridHeightInTiles = gridHeightInTiles;
+    private int tmpColor = color;
 
     private static final Settings ourInstance = new Settings();
 
@@ -89,5 +90,13 @@ public class Settings {
 
     public void setTmpGridHeightInTiles(int tmpGridHeightInTiles) {
         this.tmpGridHeightInTiles = tmpGridHeightInTiles;
+    }
+
+    public int getTmpColor() {
+        return tmpColor;
+    }
+
+    public void setTmpColor(int tmpColor) {
+        this.tmpColor = tmpColor;
     }
 }

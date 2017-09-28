@@ -1,7 +1,6 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,6 +17,7 @@ public class Pallete {
 
     private Pallete() {
         colors = new ArrayList<>();
+
         addRGBAColor(255,255,255,255);
         addRGBAColor(0,0,0,255);
 
@@ -44,6 +44,6 @@ public class Pallete {
     }
 
     public List<Integer> getColors(){
-        return Collections.unmodifiableList(colors);
+        return colors;
     }
 }

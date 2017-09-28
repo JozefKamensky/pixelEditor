@@ -34,6 +34,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
     private HSLColorPicker picker;
     private ImageView image;
     private Button selectButton;
+    private Button palleteButton;
     private ImageButton selectedColorButton;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -65,17 +66,19 @@ public class AndroidCanvasExample extends AppCompatActivity{
         dialog.setContentView(R.layout.color_picker);
         dialog.setTitle(getResources().getString(R.string.colorPickerTitle));
         image = (ImageView) dialog.findViewById(R.id.imageViewActualColor);
-        image.getBackground().setColorFilter(Settings.getInstance().getColor(), PorterDuff.Mode.MULTIPLY);
+        //image.getBackground().setColorFilter(Settings.getInstance().getColor(), PorterDuff.Mode.SRC_IN);
         picker = (HSLColorPicker) dialog.findViewById(R.id.HSLColorPicker);
         selectButton = (Button) dialog.findViewById(R.id.buttonSelectColor);
+        palleteButton = (Button) dialog.findViewById(R.id.buttonAddToPalette);
 
         picker.setColorSelectionListener(new SimpleColorSelectionListener() {
             @Override
             public void onColorSelected(int color) {
                 // Do whatever you want with the color
-                image.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                image.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+                Settings.getInstance().setColor(color);
 //                selectedColor = color;
-                EventBus.getDefault().post(new ColorChangeEvent(color));
+
             }
         });
 
@@ -85,7 +88,15 @@ public class AndroidCanvasExample extends AppCompatActivity{
 //                Settings.getInstance().setColor(selectedColor);
 //                changeSelectedColorVisualization(selectedColor);
 //                EventBus.getDefault().post(new ColorChangeEvent(selectedColor));
+                EventBus.getDefault().post(new ColorChangeEvent(Settings.getInstance().getColor()));
                 dialog.dismiss();
+            }
+        });
+
+        palleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new AddColorToPalleteEvent(Settings.getInstance().getColor()));
             }
         });
 
@@ -239,6 +250,18 @@ public class AndroidCanvasExample extends AppCompatActivity{
     public void onMessageEvent(ColorChangeEvent event) {
         Settings.getInstance().setColor(event.color);
         changeSelectedColorVisualization(event.color);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RemoveFromPalleteEvent event) {
+        boolean success = pAdapter.removeItem(event.position);
+        if (success) Toast.makeText(getApplicationContext(), "Color removed from pallete.", Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AddColorToPalleteEvent event) {
+        boolean success = pAdapter.addItem(event.color);
+        if (success) Toast.makeText(getApplicationContext(), "Color added to pallete.", Toast.LENGTH_LONG).show();
     }
 
     @Override

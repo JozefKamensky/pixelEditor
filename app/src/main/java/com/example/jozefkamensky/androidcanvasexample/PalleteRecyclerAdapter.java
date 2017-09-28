@@ -12,19 +12,20 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+
 /**
  * Created by jozefkamensky on 9/24/17.
  */
 
 public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecyclerAdapter.ColorHolder> {
 
-    private List<Integer> mColors;
+    public List<Integer> mColors;
 
     public PalleteRecyclerAdapter(List<Integer> colors) {
         mColors = colors;
     }
 
-    public static class ColorHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ColorHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         //2
         private ImageView mItemImageView;
         private int mColor;
@@ -35,6 +36,7 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
             Log.e("HOLDER", "CREATE!");
             mItemImageView = (ImageView) v.findViewById(R.id.colorPalleteItem);
             v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
         }
 
         @Override
@@ -62,6 +64,13 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
 
             return "R: " + r + ", G: " + g + ", B: " + b + ", A: " + a;
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Log.d("PALLETE", "onLongClick remove color in position: " + getAdapterPosition());
+            EventBus.getDefault().post(new RemoveFromPalleteEvent(getAdapterPosition()));
+            return true;
+        }
     }
 
     @Override
@@ -80,5 +89,19 @@ public class PalleteRecyclerAdapter extends RecyclerView.Adapter<PalleteRecycler
     @Override
     public int getItemCount() {
         return mColors.size();
+    }
+
+    public boolean removeItem(int position){
+        int oldSize = mColors.size();
+        mColors.remove(position);
+        notifyItemRemoved(position);
+        return ( oldSize == (mColors.size() + 1));
+    }
+
+    public boolean addItem(int color){
+        int oldSize = mColors.size();
+        mColors.add(color);
+        notifyItemInserted(mColors.size());
+        return ( oldSize == (mColors.size() - 1));
     }
 }
