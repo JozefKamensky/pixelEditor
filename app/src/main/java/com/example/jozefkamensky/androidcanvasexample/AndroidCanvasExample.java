@@ -263,6 +263,14 @@ public class AndroidCanvasExample extends AppCompatActivity{
         builder.show();
     }
 
+    public void shiftLeft(View v){
+        customCanvas.shiftGridLeft();
+    }
+
+    public void shiftRight(View v){
+        customCanvas.shiftGridRight();
+    }
+
     private void changeSelectedColorVisualization(int color){
         selectedColorButton.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }

@@ -142,6 +142,16 @@ public class CanvasView extends View {
         invalidate();
     }
 
+    public void shiftGridLeft(){
+        grid.shiftToLeft();
+        invalidate();
+    }
+
+    public void shiftGridRight(){
+        grid.shiftToRight();
+        invalidate();
+    }
+
     public void exportImage(String name){
         Settings s = Settings.getInstance();
 

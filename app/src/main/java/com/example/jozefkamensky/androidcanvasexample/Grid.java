@@ -45,11 +45,11 @@ public class Grid {
         tilesInt = new int[heightInTiles][widthInTiles];
 
         //int transparentWhite = RGBtoIntColor(255,255,255, 0);
-        int color = RGBtoIntColor(255,255,0,255);
+        int color = RGBtoIntColor(255,255,255,0);
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
                 tiles[i][j] = new Tile(startX + j * tileSize, startY + i * tileSize);
-                tilesInt[i][j] = color;
+                //tilesInt[i][j] = color;
             }
         }
     }
@@ -153,5 +153,25 @@ public class Grid {
 
     public int RGBtoIntColor(int R, int G, int B, int A){
         return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
+    }
+
+    public void shiftToRight(){
+        int y;
+        for (y = 0; y < height; y++){
+            for (int x = width - 1; x > 0 ; x--){
+                tiles[y][x].setPaint(tiles[y][x - 1].getPaint().getColor());
+            }
+        }
+        for (y = 0; y < height; y++) tiles[y][0].setColor(255,255,255,0);
+    }
+
+    public void shiftToLeft(){
+        int y;
+        for (y = 0; y < height; y++){
+            for (int x = 0; x < width - 1 ; x++){
+                tiles[y][x].setPaint(tiles[y][x + 1].getPaint().getColor());
+            }
+        }
+        for (y = 0; y < height; y++) tiles[y][width - 1].setColor(255,255,255,0);
     }
 }
