@@ -1,5 +1,7 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -118,6 +120,19 @@ public class Grid {
         return res;
     }
 
+    public List<RectFToDraw> getRectanglesToDraw(){
+        List<RectFToDraw> result = new ArrayList<>();
+        for (int i = 0; i < height; i++){
+            for (int j = 0; j < width; j++){
+                if (isColorTransparent(tiles[i][j].getPaint().getColor())){
+                    result.addAll(divideTileToRects(tiles[i][j].getX(), tiles[i][j].getY(), tileSize));
+                }
+                else result.add(new RectFToDraw(tiles[i][j].getTileAsRect(tileSize), tiles[i][j].getPaint()));
+            }
+        }
+        return result;
+    }
+
     public Tile[][] getGridTiles(){
         Log.d("TILE", "GRID - top left corner color: " + tiles[0][0].getPaint().getColor());
         return tiles;
@@ -155,6 +170,11 @@ public class Grid {
         return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
     }
 
+    private boolean isColorTransparent(int color){
+        int a = (color >> 24) & 0xff;
+        return (a == 0);
+    }
+
     public void shiftToRight(){
         int y;
         for (y = 0; y < height; y++){
@@ -173,5 +193,37 @@ public class Grid {
             }
         }
         for (y = 0; y < height; y++) tiles[y][width - 1].setColor(255,255,255,0);
+    }
+
+    private List<RectFToDraw> divideTileToRects(int x, int y, int tileSize){
+        List<RectFToDraw> rectangles = new ArrayList<>();
+        int edge = tileSize/4;
+
+        Paint white = new Paint();
+        white.setColor(convertColorFromRGBAToInt(255,255,255,255));
+
+        Paint grey = new Paint();
+        grey.setColor(convertColorFromRGBAToInt(101,108,119,255));
+
+        boolean whiteTurn = true;
+        for (int i = 0; i < 4; i++){
+            whiteTurn = !whiteTurn;
+            for (int j = 0; j < 4; j++){
+                if (whiteTurn) {
+                    rectangles.add(new RectFToDraw(new RectF(x + (edge * i), y + (edge * j), x + (edge * (i + 1)), y + (edge * (j + 1))), white));
+                }
+                else {
+                    rectangles.add(new RectFToDraw(new RectF(x + (edge * i), y + (edge * j), x + (edge * (i + 1)), y + (edge * (j + 1))), grey));
+                }
+                whiteTurn = !whiteTurn;
+            }
+        }
+
+        return rectangles;
+    }
+
+    private int convertColorFromRGBAToInt(int R, int G, int B, int A){
+        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
+        return color;
     }
 }

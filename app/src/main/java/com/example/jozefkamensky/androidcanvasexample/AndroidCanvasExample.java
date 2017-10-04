@@ -73,16 +73,6 @@ public class AndroidCanvasExample extends AppCompatActivity{
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
-
-//        List<Integer> colors;
-//        long start = System.currentTimeMillis();
-//        saveToFile();
-//        long end = System.currentTimeMillis();
-//        Log.d("WRITE", "save to file duration: " + (end - start));
-//        start = System.currentTimeMillis();
-//        colors = readFromFile();
-//        end = System.currentTimeMillis();
-//        Log.d("READ", "read from file duration: " + (end - start));
     }
 
     public void showColorPicker(View w){

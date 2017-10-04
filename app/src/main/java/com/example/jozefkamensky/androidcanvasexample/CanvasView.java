@@ -86,6 +86,9 @@ public class CanvasView extends View {
         for(Tile t: grid.getGridTilesAsList()){
             canvas.drawRect(t.getTileAsRect(grid.getTileSize()), t.getPaint());
         }
+//        for (RectFToDraw r : grid.getRectanglesToDraw()){
+//            canvas.drawRect(r.getRect(),r.getPaint());
+//        }
     }
 
     // when ACTION_DOWN start touch according to the x,y values
