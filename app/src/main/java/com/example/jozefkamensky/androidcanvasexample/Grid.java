@@ -197,7 +197,7 @@ public class Grid {
 
     private List<RectFToDraw> divideTileToRects(int x, int y, int tileSize){
         List<RectFToDraw> rectangles = new ArrayList<>();
-        int edge = tileSize/4;
+        int edge = tileSize/2;
 
         Paint white = new Paint();
         white.setColor(convertColorFromRGBAToInt(255,255,255,255));
@@ -205,10 +205,10 @@ public class Grid {
         Paint grey = new Paint();
         grey.setColor(convertColorFromRGBAToInt(101,108,119,255));
 
-        boolean whiteTurn = true;
-        for (int i = 0; i < 4; i++){
+        boolean whiteTurn = false;
+        for (int i = 0; i < 2; i++){
             whiteTurn = !whiteTurn;
-            for (int j = 0; j < 4; j++){
+            for (int j = 0; j < 2; j++){
                 if (whiteTurn) {
                     rectangles.add(new RectFToDraw(new RectF(x + (edge * i), y + (edge * j), x + (edge * (i + 1)), y + (edge * (j + 1))), white));
                 }
