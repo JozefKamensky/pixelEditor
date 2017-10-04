@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 public class AndroidCanvasExample extends AppCompatActivity{
 
@@ -65,21 +66,23 @@ public class AndroidCanvasExample extends AppCompatActivity{
         gridButton = (ImageButton) findViewById(R.id.buttonGrid);
         image = (ImageView) findViewById(R.id.imageViewActualColor);
 
+        loadColors();
+
         mRecyclerView = (RecyclerView) findViewById(R.id.colorList);
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
 
-        List<Integer> colors;
-        long start = System.currentTimeMillis();
-        saveToFile();
-        long end = System.currentTimeMillis();
-        Log.d("WRITE", "save to file duration: " + (end - start));
-        start = System.currentTimeMillis();
-        colors = readFromFile();
-        end = System.currentTimeMillis();
-        Log.d("READ", "read from file duration: " + (end - start));
+//        List<Integer> colors;
+//        long start = System.currentTimeMillis();
+//        saveToFile();
+//        long end = System.currentTimeMillis();
+//        Log.d("WRITE", "save to file duration: " + (end - start));
+//        start = System.currentTimeMillis();
+//        colors = readFromFile();
+//        end = System.currentTimeMillis();
+//        Log.d("READ", "read from file duration: " + (end - start));
     }
 
     public void showColorPicker(View w){
@@ -283,14 +286,23 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(RemoveFromPalleteEvent event) {
+
         boolean success = pAdapter.removeItem(event.position);
-        if (success) Toast.makeText(getApplicationContext(), "Color removed from pallete.", Toast.LENGTH_LONG).show();
+        if (success) {
+            Pallete.getInstance().removeColor(event.position);
+            saveToFile();
+            Toast.makeText(getApplicationContext(), "Color removed from pallete.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(AddColorToPalleteEvent event) {
         boolean success = pAdapter.addItem(event.color);
-        if (success) Toast.makeText(getApplicationContext(), "Color added to pallete.", Toast.LENGTH_LONG).show();
+        if (success) {
+            Pallete.getInstance().addIntColor(event.color);
+            saveToFile();
+            Toast.makeText(getApplicationContext(), "Color added to pallete.", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -322,6 +334,11 @@ public class AndroidCanvasExample extends AppCompatActivity{
             }
         }
         return -1;
+    }
+
+    private boolean fileExists(){
+        File file = getBaseContext().getFileStreamPath(fileName);
+        return file.exists();
     }
 
     private void saveToFile(){
@@ -374,5 +391,16 @@ public class AndroidCanvasExample extends AppCompatActivity{
         res[1] = (byte) ((i >> 16) & 0xFF);
         res[0] = (byte) ((i >> 24) & 0xFF);
         return res;
+    }
+
+    private void loadColors(){
+        List<Integer> colors;
+        if (fileExists()) {
+            colors = readFromFile();
+            Pallete.getInstance().setColors(colors);
+        }
+        else{
+            Pallete.getInstance().initializePallete();
+        }
     }
 }

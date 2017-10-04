@@ -1,8 +1,5 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
-import android.content.Context;
-
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,17 +17,6 @@ public class Pallete {
 
     private Pallete() {
         colors = new ArrayList<>();
-
-        addRGBAColor(255,255,255,255);
-        addRGBAColor(0,0,0,255);
-
-        addRGBAColor(255,0,0,255);
-        addRGBAColor(0,255,0,255);
-        addRGBAColor(0,0,255,255);
-
-        addRGBAColor(255,255,0,255);
-        addRGBAColor(255,0,255,255);
-        addRGBAColor(0,255,255,255);
     }
 
     private int convertColorFromRGBAToInt(int R, int G, int B, int A){
@@ -47,6 +33,27 @@ public class Pallete {
     }
 
     public List<Integer> getColors(){
-        return colors;
+        return new ArrayList<>(colors);
+    }
+
+    public void setColors(List<Integer> clrs){
+        colors = clrs;
+    }
+
+    public void initializePallete(){
+        addRGBAColor(0,0,0,255);
+        addRGBAColor(255,255,255,255);
+
+        addRGBAColor(255,0,0,255);
+        addRGBAColor(0,255,0,255);
+        addRGBAColor(0,0,255,255);
+
+        addRGBAColor(255,255,0,255);
+        addRGBAColor(255,0,255,255);
+        addRGBAColor(0,255,255,255);
+    }
+
+    public void removeColor(int index){
+        colors.remove(index);
     }
 }
