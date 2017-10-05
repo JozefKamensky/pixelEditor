@@ -6,10 +6,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.List;
 
 /**
  * Created by jozef.kamensky on 20.9.2017.
@@ -101,14 +105,19 @@ public class CanvasView extends View {
 //                }
 //            }
 //        }
-        Path whitePath = new Path();
-        Path blackPath = new Path();
-        for(TestTile t: grid.getTiles()){
-            if (t.isColored()) blackPath.addRect(t.getRect(), Path.Direction.CW);
-            else whitePath.addRect(t.getRect(), Path.Direction.CW);
+        SparseArray<List<TestTile>> tiles = grid.getTiles();
+        for (int i = 0; i < tiles.size(); i++){
+            int color = tiles.keyAt(i);
+            Path p = new Path();
+            for (TestTile t : tiles.get(color)){
+                for (RectF r : t.getRectangles()){
+                    p.addRect(r, Path.Direction.CW);
+                }
+            }
+            Paint paint = new Paint();
+            paint.setColor(color);
+            canvas.drawPath(p, paint);
         }
-        canvas.drawPath(whitePath, whiteColor);
-        canvas.drawPath(blackPath, blackColor);
     }
 
     // when ACTION_DOWN start touch according to the x,y values
@@ -118,7 +127,7 @@ public class CanvasView extends View {
 //    }
     private void startTouch(float x, float y) {
         selectedColor = Settings.getInstance().getColor();
-        grid.changeTileColor(x, y);
+        grid.changeTileColor(x, y, selectedColor);
     }
 
     // when ACTION_MOVE move touch according to the x,y values
@@ -126,7 +135,7 @@ public class CanvasView extends View {
 //        grid.changeTileColor(x, y, selectedColor);
 //    }
     private void moveTouch(float x, float y) {
-        grid.changeTileColor(x, y);
+        grid.changeTileColor(x, y, selectedColor);
     }
 
     public void clearCanvas() {

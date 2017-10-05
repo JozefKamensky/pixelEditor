@@ -4,9 +4,11 @@ package com.example.jozefkamensky.androidcanvasexample;
  * Created by jozef.kamensky on 20.9.2017.
  */
 
-import java.util.List;
-import java.util.Arrays;
+import android.util.Log;
+import android.util.SparseArray;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Grid {
 
@@ -17,12 +19,12 @@ public class Grid {
     private int width;
     private int height;
 
-    private Tile[][] tiles;
-
     private int startX;
     private int startY;
 
-    private TestTile[][] testTiles;
+    private List<TestTile> tempTiles;
+    private SparseArray<List<TestTile>> tiles;
+    private float[] gridLinesCoordinates;
 
     public Grid(int widthInTiles, int heightInTiles, int viewWidth, int viewHeight){
         int minPaddingHorizontal = 50;
@@ -31,6 +33,7 @@ public class Grid {
         this.width = widthInTiles;
         this.height = heightInTiles;
 
+        //calculate maximum tileSize in pixels to fit grid on screen
         int tileSize1 = (viewWidth - 2 * minPaddingHorizontal) / widthInTiles;
         int tileSize2 = (viewHeight - 2 * minPaddingVertical) / heightInTiles;
         this.tileSize = (tileSize1 < tileSize2) ? tileSize1 : tileSize2;
@@ -38,80 +41,74 @@ public class Grid {
         startX = (viewWidth - widthInTiles * tileSize) / 2;
         startY = (viewHeight - heightInTiles * tileSize) / 2;
 
-        testTiles = new TestTile[heightInTiles][widthInTiles];
+        tempTiles = new ArrayList<>();
+        tiles = new SparseArray<>();
 
-        //int transparentWhite = RGBtoIntColor(255,255,255, 0);
+        int transparentWhite = RGBtoIntColor(255,255,255, 0);
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
-                testTiles[i][j] = new TestTile(startX + j * tileSize, startY + i * tileSize, tileSize);
+                TestTile t = new TestTile(j, i, tileSize,
+                        startX + j * tileSize, startY + i * tileSize , transparentWhite);
+                tempTiles.add(t);
             }
         }
+        tiles.append(transparentWhite, tempTiles);
+        gridLinesCoordinates = calculateGridLinesCoordinates();
     }
 
-    public void changeTileColor(float x, float y){
+    public void changeTileColor(float x, float y, int newColor){
 
+        Log.d("GRID", "changeTileColor!");
         int tileX = ((int)x - startX) / tileSize;
         int tileY = ((int)y - startY) / tileSize;
         if (tileX < 0 || tileX >= width) return;
         if (tileY < 0 || tileY >= height) return;
-        testTiles[tileY][tileX].setColored(true);
-        //tilesInt[tileY][tileX] = color;
-        //Log.d("TILES", "tile (" + tileX + ", " + tileY + "), color: " + tilesInt[tileY][tileX]);
-    }
-
-    public List<TestTile> getTiles(){
-        List<TestTile> list = new ArrayList<TestTile>();
-        for (TestTile[] array : testTiles) {
-            list.addAll(Arrays.asList(array));
+        Log.d("GRID", "grid x: " + tileX + ", grid y: " + tileY );
+        Log.d("GRID", "screen x: " + x + ", screen y: " + y );
+        TestTile t = findTile(tileX, tileY);
+        if (t.getColor() != newColor) {
+            Log.d("GRID", "removeTileFromList for color: " + t.getColor());
+            removeTileFromList(tileX, tileY, tiles.get(t.getColor()));
+            t.setColor(newColor);
+            addTile(t, newColor);
         }
-        return list;
     }
 
-//    public Grid(int widthInTiles, int heightInTiles, int viewWidth, int viewHeight){
-//        int minPaddingHorizontal = 50;
-//        int minPaddingVertical = 100;
-//
-//        this.width = widthInTiles;
-//        this.height = heightInTiles;
-//        Log.d("GRID_CONSTRUCTOR", "Grid width: " + width);
-//        Log.d("GRID_CONSTRUCTOR", "Grid height: " + height);
-//
-//        int tileSize1 = (viewWidth - 2 * minPaddingHorizontal) / widthInTiles;
-//        int tileSize2 = (viewHeight - 2 * minPaddingVertical) / heightInTiles;
-//        this.tileSize = (tileSize1 < tileSize2) ? tileSize1 : tileSize2;
-//        Log.d("GRID_CONSTRUCTOR", "Grid tile size: " + tileSize);
-//
-//        startX = (viewWidth - widthInTiles * tileSize) / 2;
-//        startY = (viewHeight - heightInTiles * tileSize) / 2;
-//
-//        tiles = new Tile[heightInTiles][widthInTiles];
-//
-//        //int transparentWhite = RGBtoIntColor(255,255,255, 0);
-//        int color = RGBtoIntColor(255,255,255,0);
-//        for (int i = 0; i < heightInTiles; i++){
-//            for (int j = 0; j < widthInTiles; j++){
-//                tiles[i][j] = new Tile(startX + j * tileSize, startY + i * tileSize, tileSize);
-//            }
-//        }
-//    }
-//
-//    public void changeTileColor(float x, float y, int color){
-//
-//        int tileX = ((int)x - startX) / tileSize;
-//        int tileY = ((int)y - startY) / tileSize;
-//        if (tileX < 0 || tileX >= width) return;
-//        if (tileY < 0 || tileY >= height) return;
-//        tiles[tileY][tileX].setPaint(color);
-//        //tilesInt[tileY][tileX] = color;
-//        //Log.d("TILES", "tile (" + tileX + ", " + tileY + "), color: " + tilesInt[tileY][tileX]);
-//    }
-//
-    public float[] getGridLinesCoordinates(){
+    private void removeTileFromList(int x, int y, List<TestTile> tilesForColor){
+        for(int j = 0; j < tilesForColor.size(); j++){
+            TestTile t = tilesForColor.get(j);
+            if ((t.getX() == x) && (t.getY() == y)){
+                Log.d("GRID", "tile found and removed" );
+                tilesForColor.remove(j);
+                return;
+            }
+        }
+    }
+
+    private void addTile(TestTile t, int color){
+        Log.d("GRID", "addTile for color: " + color);
+        if (tiles.get(color) == null) {
+            Log.d("GRID", "color used for the first time, creating new storage.");
+            tiles.append(color, new ArrayList<TestTile>());
+            tiles.get(color).add(t);
+        }
+        else tiles.get(color).add(t);
+    }
+
+    private TestTile findTile(int x, int y){
+        TestTile t = tempTiles.get(y * width + x);
+        Log.d("GRID", "found tile for x: " + x + " and y: " + y + " at index " + (y * width + x));
+        Log.d("GRID", "tile x: " + t.getX() + ", y: " + t.getY());
+        return t;
+    }
+
+    private float[] calculateGridLinesCoordinates(){
+        //calculate position of grid lines and store them
         int gridWidthInPixels = width * tileSize - 1;
         int gridHeightInPixels = height * tileSize - 1;
         int i;
 
-        float[] res = new float[4 * (width + height + 2)];
+        float[] linesCoordinates = new float[4 * (width + height + 2)];
         int c = 0;
 
         //add horizontal lines
@@ -120,10 +117,10 @@ public class Grid {
         float ex = startX + gridWidthInPixels;
         float ey = startY;
         for (i = 0; i <= height; i++){
-            res[c++] = sx;
-            res[c++] = sy;
-            res[c++] = ex;
-            res[c++] = ey;
+            linesCoordinates[c++] = sx;
+            linesCoordinates[c++] = sy;
+            linesCoordinates[c++] = ex;
+            linesCoordinates[c++] = ey;
 
             sy += tileSize;
             ey += tileSize;
@@ -135,86 +132,26 @@ public class Grid {
         ex = startX;
         ey = startY + gridHeightInPixels;
         for (i = 0; i <= width; i++){
-            res[c++] = sx;
-            res[c++] = sy;
-            res[c++] = ex;
-            res[c++] = ey;
+            linesCoordinates[c++] = sx;
+            linesCoordinates[c++] = sy;
+            linesCoordinates[c++] = ex;
+            linesCoordinates[c++] = ey;
 
             sx += tileSize;
             ex += tileSize;
         }
-
-        return res;
+        return linesCoordinates;
     }
-//
-//    public List<Tile> getGridTilesAsList(){
-//
-//        List<Tile> res = new ArrayList<>();
-//
-//        for (int i = 0; i < height; i++){
-//            for (int j = 0; j < width; j++){
-//                res.add(tiles[i][j]);
-//            }
-//        }
-//        return res;
-//    }
-//
-//    public Tile[][] getGridTiles(){
-//        Log.d("TILE", "GRID - top left corner color: " + tiles[0][0].getPaint().getColor());
-//        return tiles;
-//    }
-//
-//    public int getTileSize(){
-//        return tileSize;
-//    }
-//
-//    public int getStartX() {
-//        return startX;
-//    }
-//
-//    public int getStartY() {
-//        return startY;
-//    }
-//
-//    public int getWidth() {
-//        return width;
-//    }
-//
-//    public int getHeight() {
-//        return height;
-//    }
-//
-//    public int RGBtoIntColor(int R, int G, int B, int A){
-//        return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
-//    }
-//
-//    private boolean isColorTransparent(int color){
-//        int a = (color >> 24) & 0xff;
-//        return (a == 0);
-//    }
-//
-//    public void shiftToRight(){
-//        int y;
-//        for (y = 0; y < height; y++){
-//            for (int x = width - 1; x > 0 ; x--){
-//                tiles[y][x].setPaint(tiles[y][x - 1].getPaint().getColor());
-//            }
-//        }
-//        for (y = 0; y < height; y++) tiles[y][0].setColor(255,255,255,0);
-//    }
-//
-//    public void shiftToLeft(){
-//        int y;
-//        for (y = 0; y < height; y++){
-//            for (int x = 0; x < width - 1 ; x++){
-//                tiles[y][x].setPaint(tiles[y][x + 1].getPaint().getColor());
-//            }
-//        }
-//        for (y = 0; y < height; y++) tiles[y][width - 1].setColor(255,255,255,0);
-//    }
-//
-//    private int convertColorFromRGBAToInt(int R, int G, int B, int A){
-//        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
-//        return color;
-//    }
+
+    public float[] getGridLinesCoordinates(){
+        return gridLinesCoordinates;
+    }
+
+    public int RGBtoIntColor(int R, int G, int B, int A){
+        return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
+    }
+
+    public SparseArray<List<TestTile>> getTiles(){
+        return tiles;
+    }
 }
