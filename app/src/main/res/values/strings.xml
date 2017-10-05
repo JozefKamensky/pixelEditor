@@ -25,6 +25,9 @@
         <item>12</item>
         <item>18</item>
         <item>36</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
     </string-array>
     <string-array name="settingsGridHeightDimensions">
         <item>6</item>
@@ -33,6 +36,9 @@
         <item>18</item>
         <item>27</item>
         <item>36</item>
+        <item>40</item>
+        <item>45</item>
+        <item>50</item>
     </string-array>
     <string-array name="settingsTileToPixelConversion">
         <item>1</item>

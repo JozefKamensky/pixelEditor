@@ -41,6 +41,7 @@ public class Pallete {
     }
 
     public void initializePallete(){
+        addRGBAColor(255, 255, 255, 0);
         addRGBAColor(228, 166, 114, 255);
         addRGBAColor(184, 111, 80, 255);
         addRGBAColor(116, 63, 57, 255);
