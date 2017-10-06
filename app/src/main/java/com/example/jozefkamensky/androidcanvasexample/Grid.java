@@ -15,15 +15,15 @@ public class Grid {
     //size of one square tile in pixels
     private int tileSize;
 
-    //dimensions in tiles
+    //dimensions in tilesForColor
     private int width;
     private int height;
 
     private int startX;
     private int startY;
 
-    private List<TestTile> tempTiles;
-    private SparseArray<List<TestTile>> tiles;
+    private List<TestTile> tiles;
+    private SparseArray<List<TestTile>> tilesForColor;
     private float[] gridLinesCoordinates;
 
     public Grid(int widthInTiles, int heightInTiles, int viewWidth, int viewHeight){
@@ -41,18 +41,18 @@ public class Grid {
         startX = (viewWidth - widthInTiles * tileSize) / 2;
         startY = (viewHeight - heightInTiles * tileSize) / 2;
 
-        tempTiles = new ArrayList<>();
-        tiles = new SparseArray<>();
+        tiles = new ArrayList<>();
+        tilesForColor = new SparseArray<>();
 
         int transparentWhite = RGBtoIntColor(255,255,255, 0);
         for (int i = 0; i < heightInTiles; i++){
             for (int j = 0; j < widthInTiles; j++){
                 TestTile t = new TestTile(j, i, tileSize,
                         startX + j * tileSize, startY + i * tileSize , transparentWhite);
-                tempTiles.add(t);
+                tiles.add(t);
             }
         }
-        tiles.append(transparentWhite, tempTiles);
+        tilesForColor.append(transparentWhite, new ArrayList<>(tiles));
         gridLinesCoordinates = calculateGridLinesCoordinates();
     }
 
@@ -68,18 +68,18 @@ public class Grid {
         TestTile t = findTile(tileX, tileY);
         if (t.getColor() != newColor) {
             Log.d("GRID", "removeTileFromList for color: " + t.getColor());
-            removeTileFromList(tileX, tileY, tiles.get(t.getColor()));
+            removeTileFromList(tileX, tileY, tilesForColor.get(t.getColor()));
             t.setColor(newColor);
-            addTile(t, newColor);
+            addTile(t.clone(), newColor);
         }
     }
 
-    private void removeTileFromList(int x, int y, List<TestTile> tilesForColor){
-        for(int j = 0; j < tilesForColor.size(); j++){
-            TestTile t = tilesForColor.get(j);
+    private void removeTileFromList(int x, int y, List<TestTile> tilesForOneColor){
+        for(int j = 0; j < tilesForOneColor.size(); j++){
+            TestTile t = tilesForOneColor.get(j);
             if ((t.getX() == x) && (t.getY() == y)){
                 Log.d("GRID", "tile found and removed" );
-                tilesForColor.remove(j);
+                tilesForOneColor.remove(j);
                 return;
             }
         }
@@ -87,16 +87,16 @@ public class Grid {
 
     private void addTile(TestTile t, int color){
         Log.d("GRID", "addTile for color: " + color);
-        if (tiles.get(color) == null) {
+        if (tilesForColor.get(color) == null) {
             Log.d("GRID", "color used for the first time, creating new storage.");
-            tiles.append(color, new ArrayList<TestTile>());
-            tiles.get(color).add(t);
+            tilesForColor.append(color, new ArrayList<TestTile>());
+            tilesForColor.get(color).add(t);
         }
-        else tiles.get(color).add(t);
+        else tilesForColor.get(color).add(t);
     }
 
     private TestTile findTile(int x, int y){
-        TestTile t = tempTiles.get(y * width + x);
+        TestTile t = tiles.get(y * width + x);
         Log.d("GRID", "found tile for x: " + x + " and y: " + y + " at index " + (y * width + x));
         Log.d("GRID", "tile x: " + t.getX() + ", y: " + t.getY());
         return t;
@@ -151,7 +151,7 @@ public class Grid {
         return (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
     }
 
-    public SparseArray<List<TestTile>> getTiles(){
-        return tiles;
+    public SparseArray<List<TestTile>> getTilesForColor(){
+        return tilesForColor;
     }
 }

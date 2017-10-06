@@ -105,7 +105,7 @@ public class CanvasView extends View {
 //                }
 //            }
 //        }
-        SparseArray<List<TestTile>> tiles = grid.getTiles();
+        SparseArray<List<TestTile>> tiles = grid.getTilesForColor();
         for (int i = 0; i < tiles.size(); i++){
             int color = tiles.keyAt(i);
             Path p = new Path();

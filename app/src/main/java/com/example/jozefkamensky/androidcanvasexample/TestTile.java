@@ -33,6 +33,13 @@ public class TestTile {
         rectangles.add(new RectF(startX, startY + edge, startX + edge, startY + 2*edge));
     }
 
+    private TestTile(int x, int y, List<RectF> rects, int color){
+        this.x = x;
+        this.y = y;
+        this.rectangles = rects;
+        this.color = color;
+    }
+
     public List<RectF> getRectangles(){
         return rectangles;
     }
@@ -52,4 +59,9 @@ public class TestTile {
     public void setColor(int color){
         this.color = color;
     }
+
+    public TestTile clone(){
+        return new TestTile(this.x, this.y, this.rectangles, this.color);
+    }
+
 }
