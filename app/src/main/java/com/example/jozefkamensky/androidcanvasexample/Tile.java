@@ -1,93 +1,56 @@
 package com.example.jozefkamensky.androidcanvasexample;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
- * Created by jozef.kamensky on 20.9.2017.
+ * Created by jozef.kamensky on 5.10.2017.
+ * Class representing one tile of grid.
  */
 
 public class Tile {
-    private int startX;
-    private int startY;
-    private Paint paint;
-    private boolean isTransparent;
-    private int[] dividePoints;
+    // x and y coordinate in the grid of tiles
+    private int x;
+    private int y;
 
-    public Tile(int x, int y, int tileSize) {
-        this.startX = x;
-        this.startY = y;
-        paint = new Paint();
-        setColor(255, 255, 255, 0);
-        isTransparent = true;
-        //4 squares, for each 2 points with 2 coordinates
-        dividePoints = new int[4*2*2];
-        int edge = tileSize / 2;
-        dividePoints[0] = startX;
-        dividePoints[1] = startY;
-        dividePoints[2] = startX + edge;
-        dividePoints[3] = startY + edge;
+    // rectangle representing tile (with screen coordinates)
+    // used to speed up drawing
+    private RectF rectangle;
 
-        dividePoints[4] = startX + edge;
-        dividePoints[5] = startY;
-        dividePoints[6] = dividePoints[4] + edge;
-        dividePoints[7] = startY + edge;
+    // int representation of color of tile
+    private int color;
 
-        dividePoints[8] = startX;
-        dividePoints[9] = startY + edge;
-        dividePoints[10] = startX + edge;
-        dividePoints[11] = dividePoints[9] + edge;
+    // true if tile is fully transparent (A channel equals 0)
+    private boolean transparent;
 
-        dividePoints[12] = startX + edge;
-        dividePoints[13] = startY + edge;
-        dividePoints[14] = dividePoints[12] + edge;
-        dividePoints[15] = dividePoints[13] + edge;
+    public Tile(int x, int y, int tileSize, int startX, int startY, int color){
+        this.x = x;
+        this.y = y;
+        setColor(color);
+        rectangle = new RectF(startX, startY, startX + tileSize, startY + tileSize);
     }
 
-    public int getStartX() {
-        return startX;
+    public RectF getRectangle(){
+        return rectangle;
     }
 
-    public int getStartY() {
-        return startY;
+    public int getColor(){
+        return color;
     }
 
-    public void setColor(int R, int G, int B, int A){
-        int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
-        paint.setColor(color);
-        isTransparent = (A == 0);
+    public void setColor(int color){
+        this.color = color;
+        updateTransparency();
     }
 
-    public void setPaint(int color){
-        paint.setColor(color);
-        Log.d("TILE", "setPaint to color: " + paint.getColor());
+    // method checking transparency of tile
+    // used whenever tile color is changed
+    private void updateTransparency(){
+        int a = (color >> 24) & 0xff;
+        transparent = (a == 0);
     }
 
-    public Paint getPaint(){
-        return paint;
+    public boolean isTransparent(){
+        return transparent;
     }
 
-    public Rect getTileAsRect(){
-        return new Rect(startX, startY, dividePoints[14], dividePoints[15]);
-    }
-
-    public RectF getTileAsRectF(){
-        return new RectF(startX, startY, dividePoints[14], dividePoints[15]);
-    }
-
-    public List<Rect> getTileAsRects(){
-        List<Rect> rectangles = new ArrayList<>();
-        for (int i = 0; i < dividePoints.length/4; i++){
-            rectangles.add(new Rect(dividePoints[i * 4], dividePoints[i * 4 + 1], dividePoints[i * 4 + 2], dividePoints[i * 4 + 3]));
-        }
-        return rectangles;
-    }
-
-    public boolean isTransparent() {
-        return isTransparent;
-    }
 }

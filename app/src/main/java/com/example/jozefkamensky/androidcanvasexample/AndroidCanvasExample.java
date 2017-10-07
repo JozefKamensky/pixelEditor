@@ -42,17 +42,10 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
     private CanvasView customCanvas;
     private ImageButton gridButton;
-    private HSLColorPicker picker;
     private ImageView image;
-    private Button selectButton;
-    private Button palleteButton;
     private ImageButton selectedColorButton;
-    private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private PalleteRecyclerAdapter pAdapter;
     private static final String fileName = "pallete_colors";
-
-    private int selectedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +61,10 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
         loadColors();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.colorList);
-        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.colorList);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        pAdapter = new PalleteRecyclerAdapter(Pallete.getInstance().getColors());
+        pAdapter = new PalleteRecyclerAdapter(Palette.getInstance().getColors());
         mRecyclerView.setAdapter(pAdapter);
     }
 
@@ -81,9 +74,9 @@ public class AndroidCanvasExample extends AppCompatActivity{
         dialog.setTitle(getResources().getString(R.string.colorPickerTitle));
         image = (ImageView) dialog.findViewById(R.id.imageViewActualColor);
         //image.getBackground().setColorFilter(Settings.getInstance().getColor(), PorterDuff.Mode.SRC_IN);
-        picker = (HSLColorPicker) dialog.findViewById(R.id.HSLColorPicker);
-        selectButton = (Button) dialog.findViewById(R.id.buttonSelectColor);
-        palleteButton = (Button) dialog.findViewById(R.id.buttonAddToPalette);
+        HSLColorPicker picker = (HSLColorPicker) dialog.findViewById(R.id.HSLColorPicker);
+        Button selectButton = (Button) dialog.findViewById(R.id.buttonSelectColor);
+        Button palleteButton = (Button) dialog.findViewById(R.id.buttonAddToPalette);
 
         picker.setColorSelectionListener(new SimpleColorSelectionListener() {
             @Override
@@ -225,7 +218,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
                 s.setExportPixelsPerTile(selectedValue);
                 Toast.makeText(view.getContext(), getResources().getString(R.string.settingsSaveSuccessfulMessage), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-                customCanvas.initGrid();
+                customCanvas.prepareCanvas();
             }
         });
 
@@ -256,14 +249,6 @@ public class AndroidCanvasExample extends AppCompatActivity{
         builder.show();
     }
 
-    public void shiftLeft(View v){
-        customCanvas.shiftGridLeft();
-    }
-
-    public void shiftRight(View v){
-        customCanvas.shiftGridRight();
-    }
-
     private void changeSelectedColorVisualization(int color){
         selectedColorButton.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }
@@ -279,7 +264,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
 
         boolean success = pAdapter.removeItem(event.position);
         if (success) {
-            Pallete.getInstance().removeColor(event.position);
+            Palette.getInstance().removeColor(event.position);
             saveToFile();
             Toast.makeText(getApplicationContext(), "Color removed from pallete.", Toast.LENGTH_LONG).show();
         }
@@ -289,7 +274,7 @@ public class AndroidCanvasExample extends AppCompatActivity{
     public void onMessageEvent(AddColorToPalleteEvent event) {
         boolean success = pAdapter.addItem(event.color);
         if (success) {
-            Pallete.getInstance().addIntColor(event.color);
+            Palette.getInstance().addIntColor(event.color);
             saveToFile();
             Toast.makeText(getApplicationContext(), "Color added to pallete.", Toast.LENGTH_LONG).show();
         }
@@ -335,9 +320,9 @@ public class AndroidCanvasExample extends AppCompatActivity{
         Log.d("WRITE", "write from file method start");
         try {
             FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-            for (Integer color : Pallete.getInstance().getColors()) {
+            for (Integer color : Palette.getInstance().getColors()) {
                 fos.write(intToByteArray(color));
-                Log.d("WRITE", "writen to file: " + color + "\nbyte representation: " + intToByteArray(color));
+                Log.d("WRITE", "written to file: " + color + "\nbyte representation: " + byteArrayToString(intToByteArray(color)));
             }
             fos.close();
         } catch(IOException e){
@@ -350,17 +335,20 @@ public class AndroidCanvasExample extends AppCompatActivity{
         Log.d("READ", "read from file method start");
         FileInputStream fos;
         List<Integer> loadedIntColors = new ArrayList<>();
+        int bytesRead;
         try {
             fos = openFileInput(fileName);
             Log.d("READ", "file opened");
             Log.d("READ", "bytes in file: " + fos.available());
             while(fos.available() > 0){
                 byte[] b = new byte[4];
-                fos.read(b);
-                Log.d("READ", "readFromFile: " + b);
-                int value = byteArrayToInt(b);
-                Log.d("READ", "converted int: " + value + "\nbytes: " + intToByteArray(value));
-                loadedIntColors.add(value);
+                bytesRead = fos.read(b);
+                Log.d("READ", "readFromFile: " + byteArrayToString(b));
+                if(bytesRead == 4){
+                    int value = byteArrayToInt(b);
+                    Log.d("READ", "converted int: " + value + "\nbytes: " + byteArrayToString(intToByteArray(value)));
+                    loadedIntColors.add(value);
+                }
             }
             fos.close();
         } catch(IOException e){
@@ -387,10 +375,18 @@ public class AndroidCanvasExample extends AppCompatActivity{
         List<Integer> colors;
         if (fileExists()) {
             colors = readFromFile();
-            Pallete.getInstance().setColors(colors);
+            Palette.getInstance().setColors(colors);
         }
         else{
-            Pallete.getInstance().initializePallete();
+            Palette.getInstance().initializePallete();
         }
+    }
+
+    private String byteArrayToString(byte[] array){
+        StringBuilder sb = new StringBuilder();
+        for(byte b : array){
+            sb.append(b);
+        }
+        return  sb.toString();
     }
 }

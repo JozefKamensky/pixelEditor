@@ -15,31 +15,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            style="?android:attr/buttonBarStyle">
-
-            <ImageButton
-                android:id="@+id/shiftLeftButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_chevron_left_24dp"
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="shiftLeft"/>
-
-            <ImageButton
-                android:id="@+id/shiftRightButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_chevron_right_24dp"
-                style="?android:attr/buttonBarButtonStyle"
-                android:onClick="shiftRight"/>
-        </LinearLayout>
-
         <com.example.jozefkamensky.androidcanvasexample.CanvasView
             android:id="@+id/signature_canvas"
             android:layout_width="match_parent"

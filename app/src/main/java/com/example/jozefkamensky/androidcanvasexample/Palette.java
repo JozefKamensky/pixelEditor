@@ -5,17 +5,21 @@ import java.util.List;
 
 /**
  * Created by jozefkamensky on 9/24/17.
+ * Class contains palette of available colors used for quick choosing color.
+ * All colors of palette are stored in file and thus all changes (add or remove)
+ * are persistent. Palette is initialized with colors of ENDESGA 16 color list
+ * (https://lospec.com/palette-list/endesga16).
  */
 
-public class Pallete {
-    private static final Pallete ourInstance = new Pallete();
+public class Palette {
+    private static final Palette ourInstance = new Palette();
     private List<Integer> colors;
 
-    public static Pallete getInstance() {
+    public static Palette getInstance() {
         return ourInstance;
     }
 
-    private Pallete() {
+    private Palette() {
         colors = new ArrayList<>();
     }
 
