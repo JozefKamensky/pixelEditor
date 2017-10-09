@@ -238,8 +238,8 @@ public class CanvasView extends View {
             for (int x = 0; x < grid.getWidth(); x++){
                 for (int i = 0; i < pixelsPerTile; i++){
                     for (int j = 0; j < pixelsPerTile; j++){
-                        exportBitmap.setPixel( (y * pixelsPerTile) + i, (x * pixelsPerTile) + j, tiles.get(y * gridWidth + x).getColor() );
-                        Log.d("EXPORT", "bitmap x: " + ((x * pixelsPerTile) + j) + ", y: " + ((y * pixelsPerTile) + i) + ", color: " + tiles.get(y * gridWidth + x).getColor());
+                        exportBitmap.setPixel( (y * pixelsPerTile) + i, (x * pixelsPerTile) + j, tiles.get(x * gridWidth + y).getColor() );
+                        Log.d("EXPORT", "bitmap x: " + ((x * pixelsPerTile) + j) + ", y: " + ((y * pixelsPerTile) + i) + ", color: " + tiles.get(x * gridWidth + y).getColor());
                     }
                 }
             }
